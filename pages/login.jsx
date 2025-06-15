@@ -19,7 +19,7 @@ export default function Login() {
                 </div>
                 <Link className="cursor-pointer hover:underline" to={'/'}>Forgot password?</Link>
                 <div className="flex justify-center mt-3 mb-3">
-                    <button className="p-2.5 text-lg rounded-xl cursor-pointer w-full bg-blue-700 border-2 border-blue-700 hover:bg-transparent hover:border-gray-600 transition duration-500">Login</button>
+                    <button className="p-2.5 text-lg rounded-xl cursor-pointer w-full bg-blue-700 border-2 border-blue-700 hover:bg-blue-600 hover:border-blue-600 transition duration-500">Login</button>
                 </div>
                 <div className="flex justify-center mb-3">
                     <p>Or</p>
