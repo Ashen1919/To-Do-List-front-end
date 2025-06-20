@@ -1,8 +1,23 @@
 import { FcGoogle } from "react-icons/fc";
 import Header from "../components/header";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+
+function handleLogging() {
+    axios.post("http://localhost:5000/api/users/login", {
+        email : email,
+        password : password
+    }).then((res) =>{
+
+    })
+}
 
 export default function Login() {
+    //Hooks config
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
     return(
         <>
         <Header/>
@@ -11,15 +26,15 @@ export default function Login() {
             <div className="w-[30rem] h-auto border-2 backdrop-blur-4xl rounded-xl bg-white/5 border-gray-700 p-6">
                 <div className="w-full flex flex-col mb-5">
                     <label className="text-xl mb-3" htmlFor="email">Email:</label>
-                    <input className="p-2 border-2 rounded-lg border-gray-600 outline-0" autoComplete="off" type="email" name="new_email" id="email" />
+                    <input className="p-2 border-2 rounded-lg border-gray-600 outline-0" defaultValue={email} autoComplete="off" type="email" name="new_email" id="email" />
                 </div>
                 <div className="w-full flex flex-col mb-2">
                     <label className="text-xl mb-3" htmlFor="password">Password:</label>
-                    <input className="p-2 border-2 rounded-lg border-gray-600 outline-0" autoComplete="off" type="password" name="new_password" id="password" />
+                    <input className="p-2 border-2 rounded-lg border-gray-600 outline-0" defaultValue={password} autoComplete="off" type="password" name="new_password" id="password" />
                 </div>
                 <Link className="cursor-pointer hover:underline" to={'/'}>Forgot password?</Link>
                 <div className="flex justify-center mt-3 mb-3">
-                    <button className="p-2.5 text-lg rounded-xl cursor-pointer w-full bg-blue-700 border-2 border-blue-700 hover:bg-blue-600 hover:border-blue-600 transition duration-500">Login</button>
+                    <button onClick={handleLogging} className="p-2.5 text-lg rounded-xl cursor-pointer w-full bg-blue-700 border-2 border-blue-700 hover:bg-blue-600 hover:border-blue-600 transition duration-500">Login</button>
                 </div>
                 <div className="flex justify-center mb-3">
                     <p>Or</p>
