@@ -19,24 +19,30 @@ export default function ListPage() {
 
     //check user logged-in
     useEffect(() => {
+        const token = localStorage.getItem("token");
+        const email = localStorage.getItem("email");
+
         if(token){
-            setIsLoggedIn(true);
+            axios.get(import.meta.env.VITE_BACKEND_URL + "/api/notes/" + email, {
+                headers: {
+                    Authorization : "Bearer " + token,
+                    "Content-Type" : "application/json"
+                }
+            }).then((res) => {
+            setNotes(res.data.notes);
             setIsNotesLoading(true);
+            setIsLoggedIn(true);
+
+        }).catch((err) => {
+            console.log(err);
+        })
+            
         } else{
             setIsLoggedIn(false);
             setIsNotesLoading(false);
         }
-    }, [isLoggedIn])
+    }, [])
 
-    //get the notes
-    useEffect(() => {
-        axios.get(import.meta.env.VITE_BACKEND_URL + "/api/notes/", email).then((res) => {
-            setNotes(res.data.notes);
-            setIsNotesLoading(true);
-        }).catch((err) => {
-            console.log(err);
-        })
-    }, [isnotesLoading])
 
     //notes creation function
     function handleNoteCreation() {
@@ -48,6 +54,7 @@ export default function ListPage() {
         }).then((res) => {
             setIsNotesLoading(true);
             toast.success("notes creation successfully");
+            window.location.reload();
         }).catch((err) => {
             console.log(err);
             toast.error("Something went wrong");
@@ -73,7 +80,8 @@ export default function ListPage() {
             <div className="w-[60%] h-auto overflow-auto p-5">
                 {isLoggedIn ? (
                     isnotesLoading ? (
-                        notes.map((Note) => (
+                        notes.length > 0 ? (
+                            notes.slice().reverse().map((Note) => (
                             <div key={Note.noteID} className="w-full h-[16rem] border-2 border-gray-700 rounded-xl p-2 mb-3 relative">
                                 <div className="w-full flex justify-between mb-2">
                                     <p>Date: {Note.dateString}</p>
@@ -92,9 +100,11 @@ export default function ListPage() {
                                 </div>
                             </div>
                         ))
-                        
+                        ) : (
+                            <p className="mt-3 flex justify-center text-2xl font-semibold italic">No Notes to show.</p>
+                        )
                     ): (
-                        <p className="mt-3 flex justify-center text-2xl font-semibold italic">No Notes to show.</p>
+                        <p className="mt-3 flex justify-center text-xl font-semibold">Loading Notes......</p>
                     )
                     
                 ) : (
