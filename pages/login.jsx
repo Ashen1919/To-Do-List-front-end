@@ -1,6 +1,6 @@
 import { FcGoogle } from "react-icons/fc";
 import Header from "../components/header";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
@@ -8,6 +8,8 @@ export default function Login() {
   //Hooks config
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   function handleLogging() {
     axios
@@ -17,8 +19,8 @@ export default function Login() {
       })
       .then((res) => {
         localStorage.setItem("token", res.data.token);
-        const token = localStorage.getItem("token");
-        console.log(token)
+        localStorage.setItem("email", email);
+        navigate("/");
       })
       .catch((err) => {
         console.log(err);
