@@ -9,6 +9,7 @@ export default function Login() {
   //Hooks config
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -21,6 +22,7 @@ export default function Login() {
       .then((res) => {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("email", email);
+        setIsLoading(true);
         toast.success("Login successfully");
         navigate("/");
       })
@@ -69,10 +71,18 @@ export default function Login() {
           </Link>
           <div className="flex justify-center mt-3 mb-3">
             <button
+              disabled={isLoading}
               onClick={handleLogging}
               className="p-2.5 text-lg rounded-xl cursor-pointer w-full bg-blue-700 border-2 border-blue-700 hover:bg-blue-600 hover:border-blue-600 transition duration-500"
             >
-              Login
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <div className="border-white border-t-2 w-[20px] h-[20px] rounded-full animate-spin"></div>
+                </div>
+              ) : (
+                <span>Login</span>
+              )}
+              
             </button>
           </div>
           <div className="flex justify-center mb-3">

@@ -35,6 +35,7 @@ export default function Header() {
         localStorage.removeItem("email");
         setIsLoggedIn(false);
         toast.success("Logout successfully");
+        window.location.reload();
     }
 
     
