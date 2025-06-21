@@ -3,6 +3,7 @@ import Header from "../components/header";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function Login() {
   //Hooks config
@@ -20,10 +21,12 @@ export default function Login() {
       .then((res) => {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("email", email);
+        toast.success("Login successfully");
         navigate("/");
       })
       .catch((err) => {
         console.log(err);
+        toast.error("Something went wrong");
       });
   }
 

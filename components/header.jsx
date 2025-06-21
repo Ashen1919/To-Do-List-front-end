@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { IoIosArrowDown } from "react-icons/io";
 import { Link } from "react-router-dom";
 
@@ -33,13 +34,14 @@ export default function Header() {
         localStorage.removeItem("token");
         localStorage.removeItem("email");
         setIsLoggedIn(false);
+        toast.success("Logout successfully");
     }
 
     
     return(
         <div className="w-full h-[70px] bg-gray-800 p-5 items-center flex justify-between">
             <div>
-                <a href="/"><h1 className="text-2xl font-bold text-white">To-Do-List</h1></a>
+                <Link to={'/'}><h1 className="text-2xl font-bold text-white">To-Do-List</h1></Link>
             </div>
             <div className="max-w-full">
                 <Link className="text-white text-xl hover:underline mr-6.5" to={'/'}>Home</Link>
