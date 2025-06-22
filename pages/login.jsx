@@ -37,7 +37,7 @@ export default function Login() {
       <Header />
       <div className="w-full h-[90vh] bg-gray-900 flex flex-col items-center text-white justify-center">
         <h1 className=" font-bold text-5xl mb-5">Login</h1>
-        <div className="w-[30rem] h-auto border-2 backdrop-blur-4xl rounded-xl bg-white/5 border-gray-700 p-6">
+        <div className="w-[25rem] md:w-[30rem] h-auto border-2 backdrop-blur-4xl rounded-xl bg-white/5 border-gray-700 p-6">
           <div className="w-full flex flex-col mb-5">
             <label className="text-xl mb-3" htmlFor="email">
               Email:
