@@ -10,13 +10,15 @@ export default function ListPage() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [selectedNoteID, setSelectedNoteID] = useState("");
     const [isnotesLoading, setIsNotesLoading] = useState(false);
     const [notes, setNotes] = useState([]);
-    const [noteID, setNoteID] = useState("");
+    const [isVisible, setIsVisible] = useState(false);
 
     const token = localStorage.getItem("token");
     const email = localStorage.getItem("email");
     const notesInfo = {title, description, email}
+    const updateInfo = {title, description}
 
     //check user logged-in
     useEffect(() => {
@@ -85,6 +87,57 @@ export default function ListPage() {
         }
     }
 
+    //notes update button visible function
+    function updateNotesButtonVisible(noteID) {
+        axios.get(import.meta.env.VITE_BACKEND_URL + "/api/notes/byNoteID/" + noteID, {
+                headers : {
+                    Authorization : "Bearer " + token,
+                    "Content-Type" : "application/json"
+                }
+            }).then((res) => {
+                setTitle(res.data.notes.title);
+                setDescription(res.data.notes.description);
+                setSelectedNoteID(res.data.notes.noteID);
+                setIsVisible(true);
+            }).catch((err) =>{
+                console.log(err);
+                toast.error("Something went wrong");
+        })
+    }
+
+    //notes update function
+    function updateNotes() {
+        axios.put(import.meta.env.VITE_BACKEND_URL + "/api/notes/" + selectedNoteID, updateInfo, {
+            headers: {
+                Authorization: "Bearer " + token,
+                "Content-Type" : "application/json"
+            }
+        }).then((res) => {
+            window.location.reload();
+            toast.success("Note Updated successfully");
+        }).catch((err) => {
+            console.log(err);
+            toast.error("Something went wrong");
+        })
+    }
+
+    //notes status update
+    function updateStatus(noteID, currentStatus) {
+        axios.put(import.meta.env.VITE_BACKEND_URL + "/api/notes/" + noteID, {completed: !currentStatus}, {
+            headers: {
+                Authorization: "Bearer " + token,
+                "Content-Type" : "application/json"
+            }
+        }).then(() => {
+            window.location.reload();
+            toast.success("Note Updated successfully");
+        }).catch((err) => {
+            console.log(err);
+            toast.error("Something went wrong");
+        })
+        
+    }
+
     return(
         <>
         <Header/>
@@ -93,13 +146,18 @@ export default function ListPage() {
                 <h1 className="text-2xl font-semibold flex justify-center mb-3">Create a Note here</h1>
                 <div className="w-full flex flex-col mb-5">
                     <label className="text-xl mb-3" htmlFor="title">Title:</label>
+                    <input type="text" name="ID" id="" className="hidden" defaultValue={selectedNoteID} onChange={(e) => setSelectedNoteID(e.target.value)} />
                     <input defaultValue={title} onChange={(e) => setTitle(e.target.value)} className="p-2 border-2 rounded-lg border-gray-600 outline-0" autoComplete="off" type="text" name="new_title" id="title" />
                 </div>
                 <div className="w-full flex flex-col mb-5">
                     <label className="text-xl mb-3" htmlFor="title">Description:</label>
                     <textarea defaultValue={description} onChange={(e) => setDescription(e.target.value)} className="p-2 border-2 rounded-lg border-gray-600 outline-0" name="description" id="description"></textarea>
                 </div>
-                <button onClick={handleNoteCreation} className="p-2.5 text-lg rounded-xl cursor-pointer w-full bg-blue-700 border-2 border-blue-700 hover:bg-blue-600 hover:border-blue-600 transition duration-500">Create</button>
+                {isVisible ? (
+                    <button onClick={updateNotes} className="p-2.5 text-lg rounded-xl cursor-pointer w-full bg-green-700 border-2 border-green-700 hover:bg-green-600 hover:border-green-600 transition duration-500">Update Note</button>
+                ) : (
+                    <button onClick={handleNoteCreation} className="p-2.5 text-lg rounded-xl cursor-pointer w-full bg-blue-700 border-2 border-blue-700 hover:bg-blue-600 hover:border-blue-600 transition duration-500">Create Note</button>
+                )}
             </div>
             <div className="w-[60%] h-auto overflow-auto p-5">
                 {isLoggedIn ? (
@@ -108,18 +166,18 @@ export default function ListPage() {
                             notes.slice().reverse().map((Note) => (
                             <div key={Note.noteID} className="w-full h-[16rem] border-2 border-gray-700 rounded-xl p-2 mb-3 relative">
                                 <div className="w-full flex justify-between mb-2">
-                                    <p>Date: {Note.dateString}</p>
-                                    <p>Time: {Note.timeString}</p>
+                                    <p>Created Date: {Note.dateString}</p>
+                                    <p>Created Time: {Note.timeString}</p>
                                 </div>
                                 <p className="font-bold text-blue-400 mb-2">Title: <span className="font-normal text-white">{Note.title}</span></p>
                                 <div className="w-full flex mb-3">
                                     <p className="font-bold text-blue-400 mb-2">Description:</p>
                                     <p className="ml-2 w-full h-[5rem] overflow-auto">{Note.description}</p>
                                 </div>
-                                <p className="mb-2 text-blue-400 font-bold">Status: <span className="text-white font-normal">{Note.completed ? "Completed": "Not-completed"}</span></p>
+                                <p className="mb-2 text-blue-400 font-bold">Status: <span className="text-white font-normal">{Note.completed ? <span className="text-red-600">Completed</span>: "Not-completed"}</span></p>
                                 <div className="w-full flex justify-end">
-                                    <button className="p-2 right-2 mr-3 cursor-pointer border-2 border-blue-600 hover:bg-blue-800 duration-500 rounded-lg bg-blue-600">Mark As Done</button>
-                                    <button className="p-2 right-2 mr-3 cursor-pointer border-2 border-green-600 hover:bg-green-800 duration-500 rounded-lg bg-green-600">Update</button>
+                                    <button onClick={() => updateStatus(Note.noteID, Note.completed)} className="p-2 right-2 mr-3 cursor-pointer border-2 border-blue-600 hover:bg-blue-800 duration-500 rounded-lg bg-blue-600">Mark As Done</button>
+                                    <button onClick={() => updateNotesButtonVisible(Note.noteID)} className="p-2 right-2 mr-3 cursor-pointer border-2 border-green-600 hover:bg-green-800 duration-500 rounded-lg bg-green-600">Update</button>
                                     <button onClick={() => deleteNotes(Note.noteID)} className="p-2 right-2 cursor-pointer border-2 border-red-600 hover:bg-red-800 duration-500 rounded-lg bg-red-600">Delete</button>
                                 </div>
                             </div>
