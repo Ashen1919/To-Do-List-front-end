@@ -32,7 +32,7 @@ export default function SignUp() {
         <Header/>
         <div className="w-full h-[90vh] bg-gray-900 flex flex-col items-center text-white justify-center">
             <h1 className=" font-bold text-5xl mb-5">SignUp</h1>
-            <div className="w-[30rem] h-auto border-2 backdrop-blur-4xl rounded-xl bg-white/5 border-gray-700 p-6">
+            <div className="w-[25rem] md:w-[30rem] h-auto border-2 backdrop-blur-4xl rounded-xl bg-white/5 border-gray-700 p-6">
                 <div className="w-full flex flex-col mb-5">
                     <label className="text-xl mb-3" htmlFor="email">Email:</label>
                     <input defaultValue={email} onChange={(e) => setEmail(e.target.value)} className="p-2 border-2 rounded-lg border-gray-600 outline-0" autoComplete="off" type="email" name="new_email" id="email" />

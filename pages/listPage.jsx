@@ -141,8 +141,8 @@ export default function ListPage() {
     return(
         <>
         <Header/>
-        <div className="w-full h-[90vh] flex text-white bg-gray-900">
-            <div className="w-[40%] h-[90vh] overflow-hidden p-5 border-r-4 border-gray-700">
+        <div className="w-full h-auto lg:h-[90vh] flex-row lg:flex text-white bg-gray-900">
+            <div className="w-full lg:w-[40%] h-auto lg:h-[90vh] overflow-hidden p-5 lg:border-r-4 border-gray-700">
                 <h1 className="text-2xl font-semibold flex justify-center mb-3">Create a Note here</h1>
                 <div className="w-full flex flex-col mb-5">
                     <label className="text-xl mb-3" htmlFor="title">Title:</label>
@@ -159,7 +159,7 @@ export default function ListPage() {
                     <button onClick={handleNoteCreation} className="p-2.5 text-lg rounded-xl cursor-pointer w-full bg-blue-700 border-2 border-blue-700 hover:bg-blue-600 hover:border-blue-600 transition duration-500">Create Note</button>
                 )}
             </div>
-            <div className="w-[60%] h-auto overflow-auto p-5">
+            <div className="w-full lg:w-[60%] h-auto lg:overflow-auto p-5">
                 {isLoggedIn ? (
                     isnotesLoading ? (
                         notes.length > 0 ? (
