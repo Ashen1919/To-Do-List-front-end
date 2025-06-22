@@ -12,6 +12,7 @@ export default function ListPage() {
     const [description, setDescription] = useState("");
     const [isnotesLoading, setIsNotesLoading] = useState(false);
     const [notes, setNotes] = useState([]);
+    const [noteID, setNoteID] = useState("");
 
     const token = localStorage.getItem("token");
     const email = localStorage.getItem("email");
@@ -46,19 +47,42 @@ export default function ListPage() {
 
     //notes creation function
     function handleNoteCreation() {
-        axios.post(import.meta.env.VITE_BACKEND_URL + "/api/notes/", notesInfo, {
-            headers: {
-                Authorization : "Bearer " + token,
-                "Content-Type" : "application/json"
-            }
-        }).then((res) => {
-            setIsNotesLoading(true);
-            toast.success("notes creation successfully");
-            window.location.reload();
-        }).catch((err) => {
-            console.log(err);
-            toast.error("Something went wrong");
-        })
+        const token = localStorage.getItem("token");
+        if(token){
+            axios.post(import.meta.env.VITE_BACKEND_URL + "/api/notes/", notesInfo, {
+                headers: {
+                    Authorization : "Bearer " + token,
+                    "Content-Type" : "application/json"
+                }
+                }).then((res) => {
+                    setIsNotesLoading(true);
+                    toast.success("notes creation successfully");
+                    window.location.reload();
+                }).catch((err) => {
+                    console.log(err);
+                    toast.error("Something went wrong");
+                })
+        }else{
+            toast.error("Login first to create notes");
+        }      
+    }
+
+    //notes delete function
+    function deleteNotes(noteID) {
+        if(window.confirm("Are you sure? Do you want to delete this note?")){
+            return axios.delete(import.meta.env.VITE_BACKEND_URL + "/api/notes/" + noteID, {
+                headers : {
+                    Authorization : "Bearer " + token,
+                    "Content-Type" : "application/json"
+                }
+            }).then((res) => {
+                toast.success("Successfully delete the note");
+                window.location.reload();
+            }).catch((err) =>{
+                console.log(err);
+                toast.error("Something went wrong");
+            })
+        }
     }
 
     return(
@@ -75,7 +99,7 @@ export default function ListPage() {
                     <label className="text-xl mb-3" htmlFor="title">Description:</label>
                     <textarea defaultValue={description} onChange={(e) => setDescription(e.target.value)} className="p-2 border-2 rounded-lg border-gray-600 outline-0" name="description" id="description"></textarea>
                 </div>
-                <button disabled={!isLoggedIn} onClick={handleNoteCreation} className="p-2.5 text-lg rounded-xl cursor-pointer w-full bg-blue-700 border-2 border-blue-700 hover:bg-blue-600 hover:border-blue-600 transition duration-500">Create</button>
+                <button onClick={handleNoteCreation} className="p-2.5 text-lg rounded-xl cursor-pointer w-full bg-blue-700 border-2 border-blue-700 hover:bg-blue-600 hover:border-blue-600 transition duration-500">Create</button>
             </div>
             <div className="w-[60%] h-auto overflow-auto p-5">
                 {isLoggedIn ? (
@@ -96,7 +120,7 @@ export default function ListPage() {
                                 <div className="w-full flex justify-end">
                                     <button className="p-2 right-2 mr-3 cursor-pointer border-2 border-blue-600 hover:bg-blue-800 duration-500 rounded-lg bg-blue-600">Mark As Done</button>
                                     <button className="p-2 right-2 mr-3 cursor-pointer border-2 border-green-600 hover:bg-green-800 duration-500 rounded-lg bg-green-600">Update</button>
-                                    <button className="p-2 right-2 cursor-pointer border-2 border-red-600 hover:bg-red-800 duration-500 rounded-lg bg-red-600">Delete</button>
+                                    <button onClick={() => deleteNotes(Note.noteID)} className="p-2 right-2 cursor-pointer border-2 border-red-600 hover:bg-red-800 duration-500 rounded-lg bg-red-600">Delete</button>
                                 </div>
                             </div>
                         ))
