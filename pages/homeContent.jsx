@@ -16,7 +16,7 @@ export default function HomeContent() {
 
             <div className="w-full md:w-1/2 h-[300px] md:h-auto">
                 <img
-                    src="../public/to-do.png"
+                    src="https://fra.cloud.appwrite.io/v1/storage/buckets/672a1e700037c646954e/files/68583c38001e1137b407/view?project=672a1dc2000b4396bb7d&mode=admin"
                     alt="to-do-image"
                     className="w-full h-full object-fill"
                 />
